@@ -181,6 +181,11 @@ class Lightspeed {
     return this.getPaginatedEndpoint(url, "Category");
   }
 
+  getManufacturers(accountId) {
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Manufacturer.json`;
+    return this.getPaginatedEndpoint(url, "Manufacturer");
+  }
+
   async getItems(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
     return this.getPaginatedEndpoint(url, "Item", {
