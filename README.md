@@ -9,7 +9,7 @@
 Use your favorite package manager to install any of the packages and save to your package.json:
 
 ```
-npm install @lightspeed-sdk
+npm install lightspeed-sdk
 ```
 
 ## Usage
