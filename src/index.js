@@ -46,8 +46,8 @@ class Lightspeed {
     }
   }
 
-  handleResponseError(err) {
-    console.log(err);
+  handleResponseError(msg, err) {
+    console.log(`${msg} - ${err}`);
     throw err;
   }
 

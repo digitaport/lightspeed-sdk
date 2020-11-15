@@ -1,4 +1,4 @@
-const { before } = require('lodash');
+const nock = require('nock');
 const Lightspeed = require('../index');
 
 describe('Lightspeed class', () => {
@@ -99,5 +99,27 @@ describe('Lightspeed class', () => {
 
       expect(unitsToWait).toBe(1);
     });
+  });
+
+  it('generates access token', async () => {
+    const lightspeed = new Lightspeed({
+      clientId: 'client',
+      clientSecret: 'secret',
+      refreshToken: 'token',
+    });
+
+    nock('https://cloud.merchantos.com')
+      .persist()
+      .post(/.*/, (body) => true)
+      .reply(200, {
+        access_token: 'access_token',
+        expires_in: 1800,
+        token_type: 'bearer',
+        scope: 'employee:all',
+      });
+
+    const token = await lightspeed.getToken();
+
+    expect(token.access_token).toEqual('access_token');
   });
 });

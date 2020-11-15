@@ -4,7 +4,7 @@
   "description": "Unofficial Lightspeed SDK for Node.js",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --env=node",
     "build": "babel src --out-dir dist",
     "check": "prettier --check src"
   },
@@ -31,6 +31,7 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "jest": "^26.6.3",
+    "nock": "^13.0.5",
     "prettier": "2.1.2"
   }
 }
