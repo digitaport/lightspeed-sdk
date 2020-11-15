@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const axios = require('axios');
 const querystring = require('querystring');
 const FormData = require('form-data');
