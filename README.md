@@ -14,7 +14,29 @@ npm install lightspeed-sdk
 
 ## Usage
 
-TBD
+Create an instance of Lightspeed class:
+
+```js
+const lightspeed = new Lightspeed({
+  clientId: 'CLIENT_ID',
+  clientSecret: 'CLIENT_SECRET',
+  refreshToken: 'REFRESH_TOKEN',
+});
+```
+
+### Examples
+
+Retrieve account information:
+
+```js
+const account = await lightspeed.getAccount();
+```
+
+Retrieve items by id:
+
+```js
+const item = await lightspeed.getItemById('accountNumber', 'id');
+```
 
 ## Requirements
 
