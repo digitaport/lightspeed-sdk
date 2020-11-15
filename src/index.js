@@ -1,10 +1,10 @@
-const _ = require("lodash");
-const axios = require("axios");
-const querystring = require("querystring");
-const FormData = require("form-data");
+const _ = require('lodash');
+const axios = require('axios');
+const querystring = require('querystring');
+const FormData = require('form-data');
 
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 class Lightspeed {
@@ -17,10 +17,10 @@ class Lightspeed {
 
   static getRequiredUnits(operation) {
     switch (operation) {
-      case "GET":
+      case 'GET':
         return 1;
-      case "POST":
-      case "PUT":
+      case 'POST':
+      case 'PUT':
         return 10;
       default:
         return 10;
@@ -38,14 +38,14 @@ class Lightspeed {
     const { method: operation } = options;
 
     const requiredUnits = Lightspeed.getRequiredUnits(operation);
-    const rateHeader = this._lastResponse.headers["x-ls-api-bucket-level"];
+    const rateHeader = this._lastResponse.headers['x-ls-api-bucket-level'];
     if (!rateHeader) return;
 
-    const [usedUnits, bucketSize] = rateHeader.split("/");
+    const [usedUnits, bucketSize] = rateHeader.split('/');
     const availableUnits = bucketSize - usedUnits;
     if (requiredUnits <= availableUnits) return;
 
-    const dripRate = this._lastResponse.headers["x-ls-api-drip-rate"];
+    const dripRate = this._lastResponse.headers['x-ls-api-drip-rate'];
     const unitsToWait = requiredUnits - availableUnits;
     const delay = Math.ceil((unitsToWait / dripRate) * 1000);
     await sleep(delay);
@@ -58,7 +58,7 @@ class Lightspeed {
     // Regenerate token
     const token = (await this.getToken()).access_token;
     if (!token) {
-      throw new Error("Error fetching token");
+      throw new Error('Error fetching token');
     }
 
     options.headers = { Authorization: `Bearer ${token}` };
@@ -75,16 +75,16 @@ class Lightspeed {
   static buildAuthFormData(clientId, clientSecret, token) {
     const form = new FormData();
 
-    form.append("client_id", clientId);
-    form.append("client_secret", clientSecret);
-    form.append("refresh_token", token);
-    form.append("grant_type", "refresh_token");
+    form.append('client_id', clientId);
+    form.append('client_secret', clientSecret);
+    form.append('refresh_token', token);
+    form.append('grant_type', 'refresh_token');
 
     return form;
   }
 
   async getToken() {
-    const url = "https://cloud.merchantos.com/oauth/access_token.php";
+    const url = 'https://cloud.merchantos.com/oauth/access_token.php';
 
     const data = Lightspeed.buildAuthFormData(
       this._clientId,
@@ -93,11 +93,11 @@ class Lightspeed {
     );
 
     const options = {
-      method: "POST",
+      method: 'POST',
       url,
       data,
       headers: {
-        "content-type": `multipart/form-data; boundary=${data._boundary}`,
+        'content-type': `multipart/form-data; boundary=${data._boundary}`,
       },
     };
 
@@ -105,15 +105,15 @@ class Lightspeed {
       const response = await axios(options);
       return response.data;
     } catch (err) {
-      return this.handleResponseError("GET TOKEN", err);
+      return this.handleResponseError('GET TOKEN', err);
     }
   }
 
   async getAccount() {
-    const url = "https://api.merchantos.com/API/Account.json";
+    const url = 'https://api.merchantos.com/API/Account.json';
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url,
     };
 
@@ -121,7 +121,7 @@ class Lightspeed {
       const response = await this.performRequest(options);
       return response.data;
     } catch (err) {
-      return this.handleResponseError("GET ACCOUNT", err);
+      return this.handleResponseError('GET ACCOUNT', err);
     }
   }
 
@@ -129,7 +129,7 @@ class Lightspeed {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer"]`;
 
     const options = {
-      method: "GET",
+      method: 'GET',
       url,
     };
 
@@ -155,7 +155,7 @@ class Lightspeed {
       })}`;
 
       const options = {
-        method: "GET",
+        method: 'GET',
         url,
       };
 
@@ -163,7 +163,7 @@ class Lightspeed {
         const apiResponse = await this.performRequest(options);
         response = response.concat(apiResponse.data[resource]);
 
-        if (offset + limit > apiResponse.data["@attributes"].count) {
+        if (offset + limit > apiResponse.data['@attributes'].count) {
           keepFetching = false;
         } else {
           offset = offset + limit;
@@ -178,17 +178,17 @@ class Lightspeed {
 
   getCategories(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Category.json`;
-    return this.getPaginatedEndpoint(url, "Category");
+    return this.getPaginatedEndpoint(url, 'Category');
   }
 
   getManufacturers(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Manufacturer.json`;
-    return this.getPaginatedEndpoint(url, "Manufacturer");
+    return this.getPaginatedEndpoint(url, 'Manufacturer');
   }
 
   async getItems(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
-    return this.getPaginatedEndpoint(url, "Item", {
+    return this.getPaginatedEndpoint(url, 'Item', {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }

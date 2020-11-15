@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "check": "prettier --check src"
   },
   "repository": {
     "type": "git",
