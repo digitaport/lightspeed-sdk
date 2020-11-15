@@ -10,9 +10,11 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - run: npm run test
+      - run: npm run check
       - run: npm run build
       # Publish to npm
       - run: npm publish --access public
