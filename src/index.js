@@ -3,16 +3,35 @@ const axios = require('axios');
 const querystring = require('querystring');
 const FormData = require('form-data');
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const { sleep } = require('./utils/timeUtils');
 
 class Lightspeed {
-  constructor({ clientId, clientSecret, refreshToken }) {
+  constructor(opts) {
+    const { clientId, clientSecret, refreshToken } = opts;
+
+    Lightspeed.validate(opts);
+
     this._lastResponse = null;
     this._clientId = clientId;
     this._clientSecret = clientSecret;
     this._refreshToken = refreshToken;
+  }
+
+  static validate(opts) {
+    let missingField = null;
+
+    const requiredFields = ['clientId', 'clientSecret', 'refreshToken'];
+
+    for (const requiredField of requiredFields) {
+      if (!opts[requiredField]) {
+        missingField = requiredField;
+        break;
+      }
+    }
+
+    if (missingField) {
+      throw new Error(`Param ${missingField} is required`);
+    }
   }
 
   static getRequiredUnits(operation) {
