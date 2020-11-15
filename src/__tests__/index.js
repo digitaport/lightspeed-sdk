@@ -1,3 +1,4 @@
+const { before } = require('lodash');
 const Lightspeed = require('../index');
 
 describe('Lightspeed class', () => {
@@ -37,6 +38,26 @@ describe('Lightspeed class', () => {
       expect(() => new Lightspeed({ clientId, clientSecret })).toThrowError(
         'Param refreshToken is required'
       );
+    });
+  });
+
+  describe('manages rate limit properly', () => {
+    let lightspeed;
+
+    beforeAll(() => {
+      lightspeed = new Lightspeed({
+        clientId: 'client',
+        clientSecret: 'secret',
+        refreshToken: 'token',
+      });
+    });
+
+    it('when no last response is available', async () => {
+      const unitsToWait = await lightspeed.handleRateLimit({
+        method: 'POST',
+      });
+
+      expect(unitsToWait).toBe(null);
     });
   });
 });

@@ -52,22 +52,24 @@ class Lightspeed {
   }
 
   async handleRateLimit(options) {
-    if (!this._lastResponse) return;
+    if (!this._lastResponse) return null;
 
     const { method: operation } = options;
 
     const requiredUnits = Lightspeed.getRequiredUnits(operation);
     const rateHeader = this._lastResponse.headers['x-ls-api-bucket-level'];
-    if (!rateHeader) return;
+    if (!rateHeader) return null;
 
     const [usedUnits, bucketSize] = rateHeader.split('/');
     const availableUnits = bucketSize - usedUnits;
-    if (requiredUnits <= availableUnits) return;
+    if (requiredUnits <= availableUnits) return 0;
 
     const dripRate = this._lastResponse.headers['x-ls-api-drip-rate'];
     const unitsToWait = requiredUnits - availableUnits;
     const delay = Math.ceil((unitsToWait / dripRate) * 1000);
     await sleep(delay);
+
+    return unitsToWait;
   }
 
   async performRequest(options) {
