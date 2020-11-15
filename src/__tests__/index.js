@@ -59,5 +59,45 @@ describe('Lightspeed class', () => {
 
       expect(unitsToWait).toBe(null);
     });
+
+    it('when last response does not have the rate limit header', async () => {
+      lightspeed.setLastResponse({
+        headers: {},
+      });
+
+      const unitsToWait = await lightspeed.handleRateLimit({
+        method: 'POST',
+      });
+
+      expect(unitsToWait).toBe(null);
+    });
+
+    it('when available units are enough', async () => {
+      lightspeed.setLastResponse({
+        headers: {
+          'x-ls-api-bucket-level': '60/180',
+        },
+      });
+
+      const unitsToWait = await lightspeed.handleRateLimit({
+        method: 'POST',
+      });
+
+      expect(unitsToWait).toBe(0);
+    });
+
+    it('when available units are not enough', async () => {
+      lightspeed.setLastResponse({
+        headers: {
+          'x-ls-api-bucket-level': '81/90',
+        },
+      });
+
+      const unitsToWait = await lightspeed.handleRateLimit({
+        method: 'POST',
+      });
+
+      expect(unitsToWait).toBe(1);
+    });
   });
 });

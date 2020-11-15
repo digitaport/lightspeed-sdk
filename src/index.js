@@ -51,12 +51,16 @@ class Lightspeed {
     throw err;
   }
 
+  setLastResponse(response) {
+    this._lastResponse = response;
+  }
+
   async handleRateLimit(options) {
     if (!this._lastResponse) return null;
 
-    const { method: operation } = options;
+    const { method } = options;
 
-    const requiredUnits = Lightspeed.getRequiredUnits(operation);
+    const requiredUnits = Lightspeed.getRequiredUnits(method);
     const rateHeader = this._lastResponse.headers['x-ls-api-bucket-level'];
     if (!rateHeader) return null;
 
