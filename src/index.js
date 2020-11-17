@@ -4,6 +4,8 @@ const FormData = require('form-data');
 
 const { sleep } = require('./utils/timeUtils');
 
+const { getPaginatedEndpointGenerator } = require('./utils/Cursor');
+
 class Lightspeed {
   constructor(opts) {
     const { clientId, clientSecret, refreshToken } = opts;
@@ -210,9 +212,16 @@ class Lightspeed {
     return this.getPaginatedEndpoint(url, 'Manufacturer');
   }
 
-  async getItems(accountId) {
+  getItems(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
     return this.getPaginatedEndpoint(url, 'Item', {
+      load_relations: '["ItemShops", "Images", "Manufacturer"]',
+    });
+  }
+
+  getItemsGenerator(accountId) {
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
+    return getPaginatedEndpointGenerator(url, 'Item', {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }

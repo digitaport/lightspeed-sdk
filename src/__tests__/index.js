@@ -122,4 +122,43 @@ describe('Lightspeed class', () => {
 
     expect(token.access_token).toEqual('access_token');
   });
+
+  it('iterates over generator', async () => {
+    const lightspeed = new Lightspeed({
+      clientId: 'client',
+      clientSecret: 'secret',
+      refreshToken: 'token',
+    });
+
+    nock('https://api.merchantos.com')
+      .persist()
+      .get(/.*/)
+      .reply(200, {
+        '@attributes': {
+          count: '1',
+          offset: '0',
+          limit: '100',
+        },
+        Item: [
+          {
+            itemID: '1',
+          },
+          {
+            itemID: '2',
+          },
+          {
+            itemID: '3',
+          },
+        ],
+      });
+
+    const response = await lightspeed.getItemsGenerator('testAccount');
+
+    const elements = [];
+    for await (const item of response) {
+      elements.push(item);
+    }
+
+    expect(elements.length).toEqual(3);
+  });
 });

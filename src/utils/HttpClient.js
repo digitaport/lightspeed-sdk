@@ -20,7 +20,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const requestOptions = {
         ...defaultRequestOptions,
-        path,
+        path: url.pathname,
         method,
       };
 
@@ -41,7 +41,7 @@ module.exports = {
             }
             const httpClientResponse = {
               status: response.statusCode,
-              jsonResponse,
+              data: jsonResponse,
               headers: response.headers,
             };
 
