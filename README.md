@@ -38,6 +38,35 @@ Retrieve items by id:
 const item = await lightspeed.getItemById('accountNumber', 'id');
 ```
 
+Retrieve all items:
+
+```js
+const items = await lightspeed.getItems('accountNumber');
+for await (const item of items) {
+  console.log(item); // { itemID: 'X', ... }
+}
+```
+
+or
+
+```js
+const items = await lightspeed.getItems('accountNumber').toArray();
+console.log(items); // [{ itemID: 'X', ... }, {...}]
+```
+
+### Pagination
+
+Pagination is handled by the SDK by returning a cursor when querying:
+
+- getItems
+- getCategories
+- getManufacturers
+
+The object has an [async iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator)
+so you can do a `for await` loop to retrieve all the items,
+or load all at the same time by doing `.toArray()` on the object. Doing `.toArray()` could lead to performance
+issues if the collection is too big.
+
 ## Requirements
 
 This package supports Node v8 LTS and higher. It's highly recommended to use the latest LTS version of node, and the documentation is written using syntax and features from that version.
