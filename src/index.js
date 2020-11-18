@@ -167,59 +167,17 @@ class Lightspeed {
     }
   }
 
-  async getPaginatedEndpoint(baseUrl, resource, qs = {}) {
-    let offset = 0;
-    const limit = 100;
-    let keepFetching = true;
-    let response = [];
-
-    while (keepFetching) {
-      const url = `${baseUrl}?${querystring.stringify({
-        ...qs,
-        offset,
-        limit,
-      })}`;
-
-      const options = {
-        method: 'GET',
-        url,
-      };
-
-      try {
-        const apiResponse = await this.performRequest(options);
-        response = response.concat(apiResponse.data[resource]);
-
-        if (offset + limit > apiResponse.data['@attributes'].count) {
-          keepFetching = false;
-        } else {
-          offset = offset + limit;
-        }
-      } catch (err) {
-        return this.handleResponseError(`GET ${resource.toUpperCase()}`, err);
-      }
-    }
-
-    return response;
-  }
-
   getCategories(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Category.json`;
-    return this.getPaginatedEndpoint(url, 'Category');
+    return new ApiCursor(url, 'Category');
   }
 
   getManufacturers(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Manufacturer.json`;
-    return this.getPaginatedEndpoint(url, 'Manufacturer');
+    return new ApiCursor(url, 'Manufacturer');
   }
 
   getItems(accountId) {
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
-    return this.getPaginatedEndpoint(url, 'Item', {
-      load_relations: '["ItemShops", "Images", "Manufacturer"]',
-    });
-  }
-
-  getItemsCursor(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
     return new ApiCursor(url, 'Item', {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',

@@ -109,7 +109,6 @@ describe('Lightspeed class', () => {
     });
 
     nock('https://cloud.merchantos.com')
-      .persist()
       .post(/.*/, (body) => true)
       .reply(200, {
         access_token: 'access_token',
@@ -123,82 +122,242 @@ describe('Lightspeed class', () => {
     expect(token.access_token).toEqual('access_token');
   });
 
-  it('iterates over generator', async () => {
-    const lightspeed = new Lightspeed({
-      clientId: 'client',
-      clientSecret: 'secret',
-      refreshToken: 'token',
-    });
+  describe('validates paginated endpoints', () => {
+    describe('for Items', () => {
+      it('iterates over generator', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
 
-    nock('https://api.merchantos.com')
-      .persist()
-      .get(/.*/)
-      .reply(200, {
-        '@attributes': {
-          count: '1',
-          offset: '0',
-          limit: '100',
-        },
-        Item: [
-          {
-            itemID: '1',
-          },
-          {
-            itemID: '2',
-          },
-          {
-            itemID: '3',
-          },
-        ],
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Item.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Item: [
+              {
+                itemID: '1',
+              },
+              {
+                itemID: '2',
+              },
+              {
+                itemID: '3',
+              },
+            ],
+          });
+
+        const response = await lightspeed.getItems('testAccount');
+
+        const elements = [];
+        for await (const item of response) {
+          elements.push(item);
+        }
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].itemID).toEqual('1');
+        expect(elements[1].itemID).toEqual('2');
+        expect(elements[2].itemID).toEqual('3');
       });
 
-    const response = await lightspeed.getItemsCursor('testAccount');
+      it('iterates over array with toArray()', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
 
-    const elements = [];
-    for await (const item of response) {
-      elements.push(item);
-    }
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Item.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Item: [
+              {
+                itemID: '1',
+              },
+              {
+                itemID: '2',
+              },
+              {
+                itemID: '3',
+              },
+            ],
+          });
 
-    expect(elements.length).toEqual(3);
-    expect(elements[0].itemID).toEqual('1');
-    expect(elements[1].itemID).toEqual('2');
-    expect(elements[2].itemID).toEqual('3');
-  });
+        const elements = await lightspeed.getItems('testAccount').toArray();
 
-  it('iterates over array with toArray()', async () => {
-    const lightspeed = new Lightspeed({
-      clientId: 'client',
-      clientSecret: 'secret',
-      refreshToken: 'token',
+        expect(elements.length).toEqual(3);
+        expect(elements[0].itemID).toEqual('1');
+        expect(elements[1].itemID).toEqual('2');
+        expect(elements[2].itemID).toEqual('3');
+      });
     });
 
-    nock('https://api.merchantos.com')
-      .persist()
-      .get(/.*/)
-      .reply(200, {
-        '@attributes': {
-          count: '1',
-          offset: '0',
-          limit: '100',
-        },
-        Item: [
-          {
-            itemID: '1',
-          },
-          {
-            itemID: '2',
-          },
-          {
-            itemID: '3',
-          },
-        ],
+    describe('for Categories', () => {
+      it('iterates over generator', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
+
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Category.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Category: [
+              {
+                categoryID: '1',
+              },
+              {
+                categoryID: '2',
+              },
+              {
+                categoryID: '3',
+              },
+            ],
+          });
+
+        const response = await lightspeed.getCategories('testAccount');
+
+        const elements = [];
+        for await (const item of response) {
+          elements.push(item);
+        }
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].categoryID).toEqual('1');
+        expect(elements[1].categoryID).toEqual('2');
+        expect(elements[2].categoryID).toEqual('3');
       });
 
-    const elements = await lightspeed.getItemsCursor('testAccount').toArray();
+      it('iterates over array with toArray()', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
 
-    expect(elements.length).toEqual(3);
-    expect(elements[0].itemID).toEqual('1');
-    expect(elements[1].itemID).toEqual('2');
-    expect(elements[2].itemID).toEqual('3');
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Category.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Category: [
+              {
+                categoryID: '1',
+              },
+              {
+                categoryID: '2',
+              },
+              {
+                categoryID: '3',
+              },
+            ],
+          });
+
+        const elements = await lightspeed.getCategories('testAccount').toArray();
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].categoryID).toEqual('1');
+        expect(elements[1].categoryID).toEqual('2');
+        expect(elements[2].categoryID).toEqual('3');
+      });
+    });
+
+    describe('for Manufacturers', () => {
+      it('iterates over generator', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
+
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Manufacturer.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Manufacturer: [
+              {
+                manufacturerID: '1',
+              },
+              {
+                manufacturerID: '2',
+              },
+              {
+                manufacturerID: '3',
+              },
+            ],
+          });
+
+        const response = await lightspeed.getManufacturers('testAccount');
+
+        const elements = [];
+        for await (const item of response) {
+          elements.push(item);
+        }
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].manufacturerID).toEqual('1');
+        expect(elements[1].manufacturerID).toEqual('2');
+        expect(elements[2].manufacturerID).toEqual('3');
+      });
+
+      it('iterates over array with toArray()', async () => {
+        const lightspeed = new Lightspeed({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
+
+        nock('https://api.merchantos.com')
+          .get('/API/Account/testAccount/Manufacturer.json')
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Manufacturer: [
+              {
+                manufacturerID: '1',
+              },
+              {
+                manufacturerID: '2',
+              },
+              {
+                manufacturerID: '3',
+              },
+            ],
+          });
+
+        const elements = await lightspeed.getManufacturers('testAccount').toArray();
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].manufacturerID).toEqual('1');
+        expect(elements[1].manufacturerID).toEqual('2');
+        expect(elements[2].manufacturerID).toEqual('3');
+      });
+    });
   });
 });
