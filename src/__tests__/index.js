@@ -164,4 +164,41 @@ describe('Lightspeed class', () => {
     expect(elements[1].itemID).toEqual('2');
     expect(elements[2].itemID).toEqual('3');
   });
+
+  it('iterates over array with toArray()', async () => {
+    const lightspeed = new Lightspeed({
+      clientId: 'client',
+      clientSecret: 'secret',
+      refreshToken: 'token',
+    });
+
+    nock('https://api.merchantos.com')
+      .persist()
+      .get(/.*/)
+      .reply(200, {
+        '@attributes': {
+          count: '1',
+          offset: '0',
+          limit: '100',
+        },
+        Item: [
+          {
+            itemID: '1',
+          },
+          {
+            itemID: '2',
+          },
+          {
+            itemID: '3',
+          },
+        ],
+      });
+
+    const elements = await lightspeed.getItemsCursor('testAccount').toArray();
+
+    expect(elements.length).toEqual(3);
+    expect(elements[0].itemID).toEqual('1');
+    expect(elements[1].itemID).toEqual('2');
+    expect(elements[2].itemID).toEqual('3');
+  });
 });

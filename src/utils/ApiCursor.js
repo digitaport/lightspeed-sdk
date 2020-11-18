@@ -12,6 +12,14 @@ class ApiCursor extends Readable {
     this.opts = opts;
   }
 
+  async toArray() {
+    const elements = [];
+    for await (const item of this) {
+      elements.push(item);
+    }
+    return elements;
+  }
+
   async *[Symbol.asyncIterator]() {
     let offset = 0;
     const limit = 100;
