@@ -152,7 +152,7 @@ describe('Lightspeed class', () => {
         ],
       });
 
-    const response = await lightspeed.getItemsGenerator('testAccount');
+    const response = await lightspeed.getItemsCursor('testAccount');
 
     const elements = [];
     for await (const item of response) {
@@ -160,5 +160,8 @@ describe('Lightspeed class', () => {
     }
 
     expect(elements.length).toEqual(3);
+    expect(elements[0].itemID).toEqual('1');
+    expect(elements[1].itemID).toEqual('2');
+    expect(elements[2].itemID).toEqual('3');
   });
 });

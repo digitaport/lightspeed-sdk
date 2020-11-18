@@ -4,7 +4,7 @@ const FormData = require('form-data');
 
 const { sleep } = require('./utils/timeUtils');
 
-const { getPaginatedEndpointGenerator } = require('./utils/Cursor');
+const { ApiCursor } = require('./utils/ApiCursor');
 
 class Lightspeed {
   constructor(opts) {
@@ -219,9 +219,9 @@ class Lightspeed {
     });
   }
 
-  getItemsGenerator(accountId) {
+  getItemsCursor(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
-    return getPaginatedEndpointGenerator(url, 'Item', {
+    return new ApiCursor(url, 'Item', {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }
