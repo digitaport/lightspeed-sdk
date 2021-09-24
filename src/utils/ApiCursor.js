@@ -4,10 +4,11 @@ const querystring = require('querystring');
 const { performRequest } = require('./HttpClient');
 
 class ApiCursor extends Readable {
-  constructor(baseUrl, resource, qs, opts) {
+  constructor(baseUrl, resource, instance, qs, opts) {
     super();
     this._baseUrl = baseUrl;
     this._resource = resource;
+    this._instance = instance;
     this._qs = qs;
     this.opts = opts;
   }
@@ -25,6 +26,7 @@ class ApiCursor extends Readable {
     const limit = 100;
     let keepFetching = true;
     const resource = this._resource;
+    const lsInstance = this._instance;
 
     while (keepFetching) {
       const url = `${this._baseUrl}?${querystring.stringify({
@@ -34,7 +36,12 @@ class ApiCursor extends Readable {
       })}`;
 
       try {
-        const apiResponse = await performRequest(url, 'GET');
+        const options = {
+          method: 'GET',
+          url,
+        };
+        
+        const apiResponse = await lsInstance.performRequest(options);
 
         for (const element of apiResponse.data[resource]) {
           yield element;

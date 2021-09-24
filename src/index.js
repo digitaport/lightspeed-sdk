@@ -169,17 +169,17 @@ class Lightspeed {
 
   getCategories(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Category.json`;
-    return new ApiCursor(url, 'Category');
+    return new ApiCursor(url, 'Category', this);
   }
 
   getManufacturers(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Manufacturer.json`;
-    return new ApiCursor(url, 'Manufacturer');
+    return new ApiCursor(url, 'Manufacturer', this);
   }
 
   getItems(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
-    return new ApiCursor(url, 'Item', {
+    return new ApiCursor(url, 'Item', this, {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }
