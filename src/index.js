@@ -183,6 +183,18 @@ class Lightspeed {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }
+
+  getCustomers(accountId) {
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Customer.json`;
+    return new ApiCursor(url, 'Customer', this, {
+      load_relations: '["Contact", "CustomFieldValues"]',
+    });
+  }
+
+  getCustomerTypes(accountId) {
+    const url  = `https://api.merchantos.com/API/Account/${accountId}/CustomerType.json`;
+    return new ApiCursor(url, 'CustomerType', this);
+  }
 }
 
 module.exports = Lightspeed;
