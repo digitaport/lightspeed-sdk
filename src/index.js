@@ -94,7 +94,6 @@ class Lightspeed {
 
     // Keep last response
     this._lastResponse = response;
-
     return response;
   }
 
@@ -120,8 +119,8 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url,
-      data,
+      url: url,
+      data: data,
       headers: {
         'content-type': `multipart/form-data; boundary=${data._boundary}`,
       },
@@ -135,8 +134,126 @@ class Lightspeed {
     }
   }
 
+  async postItem(accountId, item){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item.json`;
+
+    const options = {
+      method: 'POST',
+      url: url,
+      data: item
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM', err);
+    }
+  }
+
+  async postCustomer(accountId, customer){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer.json`;
+
+    const options = {
+      method: 'POST',
+      url: url,
+      data: customer
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST CUSTOMER', err);
+    }
+  }
+
+  async postCustomerType(accountId, customerType){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/CustomerType.json`
+
+    const options = {
+      method: 'POST',
+      url: url,
+      data: customerType
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST CUSTOMER TYPE', err);
+    }
+  }
+
+  async postItemMatrix(accountId, itemMatrix){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix.json`
+  
+    const options = {
+      method: 'POST',
+      url: url,
+      data: itemMatrix
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM MATRIX', err);
+    }
+  }
+
+  async putItemMatrix(accountId, matrix, ID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix/${ID}.json`;
+
+    const options = {
+      method: 'PUT',
+      url: url,
+      data: matrix
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('PUT ITEM MATRIX', err);
+    }
+  }
+
+  async putCustomer(accountId, customer, ID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${ID}.json`;
+
+    const options = {
+      method: 'PUT',
+      url: url,
+      data: customer
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('PUT CUSTOMER', err);
+    }
+  }
+
   async getAccount() {
     const url = 'https://api.merchantos.com/API/Account.json';
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET ACCOUNT', err);
+    }
+  }
+
+  async getItemByCustomSku(accountId, customSku){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item.json?customSku=${customSku}`;
 
     const options = {
       method: 'GET',
