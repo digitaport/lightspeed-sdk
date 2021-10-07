@@ -202,6 +202,23 @@ class Lightspeed {
     }
   }
 
+  async putItem(accountId, item, ID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item/${ID}.json`;
+
+    const options = {
+      method: 'PUT',
+      url: url,
+      data: item
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('PUT ITEM', err);
+    }
+  }
+
   async putItemMatrix(accountId, matrix, ID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix/${ID}.json`;
 
@@ -249,6 +266,22 @@ class Lightspeed {
       return response.data;
     } catch (err) {
       return this.handleResponseError('GET ACCOUNT', err);
+    }
+  }
+
+  async getItemsByMatrixID(accountId, itemMatrixID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item.json?itemMatrixID=${itemMatrixID}`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET ITEM', err);
     }
   }
 
