@@ -43,6 +43,12 @@ class ApiCursor extends Readable {
         
         const apiResponse = await lsInstance.performRequest(options);
 
+        // When a list is empty, the API response doesn't return the "resourse" attribute
+        if(apiResponse.data[resource] == undefined){
+          keepFetching = false;
+          continue;
+        }
+
         for (const element of apiResponse.data[resource]) {
           yield element;
         }
