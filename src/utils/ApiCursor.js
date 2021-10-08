@@ -29,7 +29,6 @@ class ApiCursor extends Readable {
     const lsInstance = this._instance;
 
     while (keepFetching) {
-      console.log('\nNueva iteracion: '+keepFetching);
       const url = `${this._baseUrl}?${querystring.stringify({
         ...this._qs,
         offset,
