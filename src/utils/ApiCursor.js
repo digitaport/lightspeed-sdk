@@ -29,6 +29,7 @@ class ApiCursor extends Readable {
     const lsInstance = this._instance;
 
     while (keepFetching) {
+      console.log('\nNueva iteracion: '+keepFetching);
       const url = `${this._baseUrl}?${querystring.stringify({
         ...this._qs,
         offset,
@@ -40,13 +41,13 @@ class ApiCursor extends Readable {
           method: 'GET',
           url,
         };
-        
+
         const apiResponse = await lsInstance.performRequest(options);
 
-        // When a list is empty, the API response doesn't return the "resourse" attribute
-        if(apiResponse.data[resource] == undefined){
+        // When a list is empty, the API response doesn't return the "resource" attribute
+        if (apiResponse.data[resource] == undefined || !Array.isArray(apiResponse.data[resource])) {
           keepFetching = false;
-          continue;
+          break;
         }
 
         for (const element of apiResponse.data[resource]) {
