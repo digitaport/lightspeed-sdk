@@ -269,6 +269,22 @@ class Lightspeed {
     }
   }
 
+  async getItemMatrixByID(accountId,itemMatrixID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix/${itemMatrixID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET ITEM MATRIX', err);
+    }
+  }
+
   async getItemsByMatrixID(accountId, itemMatrixID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item.json?itemMatrixID=${itemMatrixID}`;
 
