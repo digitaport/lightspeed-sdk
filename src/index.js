@@ -269,6 +269,155 @@ class Lightspeed {
     }
   }
 
+  /* getSales(accountId){
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
+    return new ApiCursor(url, 'Sale', this); // Returns timeout error (too many sales)
+  } */
+
+  async getSales(accountId){
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
+
+    const options = {
+      method: 'GET',
+      url: url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALES', err);
+    }
+  }
+
+  async getSalePaymentByID(accountId, salePaymentID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment/${salePaymentID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE PAYMENT', err);
+    }
+  }
+
+  async getSalePaymentBySaleID(accountId, saleID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment.json?saleID=${saleID}`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE PAYMENT', err);
+    }
+  }
+
+  async getSaleLineBySaleID(accountId, saleID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SaleLine.json?saleID=${saleID}`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE LINE', err);
+    }
+  }
+
+  async getSaleLineByID(accountId, saleLineID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SaleLine/${saleLineID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE LINE', err);
+    }
+  }
+
+  async getPaymentTypeByID(accountId, paymentTypeID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/PaymentType/${paymentTypeID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET PAYMENT TYPE', err);
+    }
+  }
+
+  async getShopByID(accountId, shopID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Shop/${shopID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SHOP', err);
+    }
+  }
+
+  async getCustomerByID(accountId, customerID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${customerID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET CUSTOMER', err);
+    }
+  }
+
+  async getContactByID(accountId, contactID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Contact/${contactID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET CONTACT', err);
+    }
+  }
+
   async getItemMatrixByID(accountId,itemMatrixID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix/${itemMatrixID}.json`;
 
