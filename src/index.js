@@ -185,6 +185,23 @@ class Lightspeed {
     }
   }
 
+  async postItemAttributeSet(accountId, attributeSet){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemAttributeSet.json`
+  
+    const options = {
+      method: 'POST',
+      url: url,
+      data: attributeSet
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM ATTRIBUTE SET', err);
+    }
+  }
+
   async postItemMatrix(accountId, itemMatrix){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix.json`
   
@@ -199,6 +216,40 @@ class Lightspeed {
       return response.data;
     } catch (err) {
       return this.handleResponseError('POST ITEM MATRIX', err);
+    }
+  }
+
+  async postItemCustomField(accountId, customField){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item/CustomField.json`;
+
+    const options = {
+      method: 'POST',
+      url: url,
+      data: customField
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM CUSTOM FIELD', err);
+    }
+  }
+
+  async postCustomerCustomField(accountId, customField){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/CustomField.json`;
+
+    const options = {
+      method: 'POST',
+      url: url,
+      data: customField
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST CUSTOMER CUSTOM FIELD', err);
     }
   }
 
