@@ -320,12 +320,14 @@ class Lightspeed {
     }
   }
 
-  /* getSales(accountId){
+  getSales(accountId){
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
-    return new ApiCursor(url, 'Sale', this); // Returns timeout error (too many sales)
-  } */
+    return new ApiCursor(url, 'Sale', this, {
+      load_relations: '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+    }); 
+  }
 
-  async getSales(accountId){
+  /* async getSales(accountId){
     const relations = `?load_relations=["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]`;
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json${relations}`;
 
@@ -340,7 +342,7 @@ class Lightspeed {
     } catch (err) {
       return this.handleResponseError('GET SALES', err);
     }
-  }
+  } */
 
   async getSalePaymentByID(accountId, salePaymentID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment/${salePaymentID}.json`;
