@@ -326,7 +326,8 @@ class Lightspeed {
   } */
 
   async getSales(accountId){
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
+    const relations = `?load_relations=["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]`;
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json${relations}`;
 
     const options = {
       method: 'GET',
@@ -438,7 +439,7 @@ class Lightspeed {
   }
 
   async getCustomerByID(accountId, customerID){
-    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${customerID}.json`;
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${customerID}.json?load_relations=["CustomFieldValues", "CustomFieldValues.value"]`;
 
     const options = {
       method: 'GET',
@@ -518,7 +519,7 @@ class Lightspeed {
   }
 
   async getItemById(accountId, itemId) {
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer"]`;
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer", "CustomFieldValues", "CustomFieldValues.value"]`;
 
     const options = {
       method: 'GET',
