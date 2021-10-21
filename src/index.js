@@ -119,8 +119,8 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
-      data: data,
+      url,
+      data,
       headers: {
         'content-type': `multipart/form-data; boundary=${data._boundary}`,
       },
@@ -139,7 +139,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: item
     };
 
@@ -156,7 +156,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customer
     };
 
@@ -173,7 +173,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customerType
     };
 
@@ -190,7 +190,7 @@ class Lightspeed {
   
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: attributeSet
     };
 
@@ -207,7 +207,7 @@ class Lightspeed {
   
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: itemMatrix
     };
 
@@ -224,7 +224,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customField
     };
 
@@ -241,7 +241,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customField
     };
 
@@ -258,7 +258,7 @@ class Lightspeed {
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: item
     };
 
@@ -275,7 +275,7 @@ class Lightspeed {
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: matrix
     };
 
@@ -292,7 +292,7 @@ class Lightspeed {
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: customer
     };
 
@@ -326,23 +326,6 @@ class Lightspeed {
       load_relations: '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
     }); 
   }
-
-  /* async getSales(accountId){
-    const relations = `?load_relations=["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]`;
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json${relations}`;
-
-    const options = {
-      method: 'GET',
-      url: url,
-    };
-
-    try {
-      const response = await this.performRequest(options);
-      return response.data;
-    } catch (err) {
-      return this.handleResponseError('GET SALES', err);
-    }
-  } */
 
   async getSalePaymentByID(accountId, salePaymentID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment/${salePaymentID}.json`;
