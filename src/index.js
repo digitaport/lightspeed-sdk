@@ -119,8 +119,8 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
-      data: data,
+      url,
+      data,
       headers: {
         'content-type': `multipart/form-data; boundary=${data._boundary}`,
       },
@@ -139,7 +139,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: item
     };
 
@@ -156,7 +156,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customer
     };
 
@@ -173,7 +173,7 @@ class Lightspeed {
 
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: customerType
     };
 
@@ -185,12 +185,29 @@ class Lightspeed {
     }
   }
 
+  async postItemAttributeSet(accountId, attributeSet){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemAttributeSet.json`
+  
+    const options = {
+      method: 'POST',
+      url,
+      data: attributeSet
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM ATTRIBUTE SET', err);
+    }
+  }
+
   async postItemMatrix(accountId, itemMatrix){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/ItemMatrix.json`
   
     const options = {
       method: 'POST',
-      url: url,
+      url,
       data: itemMatrix
     };
 
@@ -202,12 +219,46 @@ class Lightspeed {
     }
   }
 
+  async postItemCustomField(accountId, customField){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item/CustomField.json`;
+
+    const options = {
+      method: 'POST',
+      url,
+      data: customField
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST ITEM CUSTOM FIELD', err);
+    }
+  }
+
+  async postCustomerCustomField(accountId, customField){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/CustomField.json`;
+
+    const options = {
+      method: 'POST',
+      url,
+      data: customField
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST CUSTOMER CUSTOM FIELD', err);
+    }
+  }
+
   async putItem(accountId, item, ID){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item/${ID}.json`;
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: item
     };
 
@@ -224,7 +275,7 @@ class Lightspeed {
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: matrix
     };
 
@@ -241,7 +292,7 @@ class Lightspeed {
 
     const options = {
       method: 'PUT',
-      url: url,
+      url,
       data: customer
     };
 
@@ -266,6 +317,141 @@ class Lightspeed {
       return response.data;
     } catch (err) {
       return this.handleResponseError('GET ACCOUNT', err);
+    }
+  }
+
+  getSales(accountId){
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
+    return new ApiCursor(url, 'Sale', this, {
+      load_relations: '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+    }); 
+  }
+
+  async getSalePaymentByID(accountId, salePaymentID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment/${salePaymentID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE PAYMENT', err);
+    }
+  }
+
+  async getSalePaymentBySaleID(accountId, saleID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SalePayment.json?saleID=${saleID}`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE PAYMENT', err);
+    }
+  }
+
+  async getSaleLineBySaleID(accountId, saleID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SaleLine.json?saleID=${saleID}`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE LINE', err);
+    }
+  }
+
+  async getSaleLineByID(accountId, saleLineID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/SaleLine/${saleLineID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE LINE', err);
+    }
+  }
+
+  async getPaymentTypeByID(accountId, paymentTypeID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/PaymentType/${paymentTypeID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET PAYMENT TYPE', err);
+    }
+  }
+
+  async getShopByID(accountId, shopID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Shop/${shopID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SHOP', err);
+    }
+  }
+
+  async getCustomerByID(accountId, customerID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${customerID}.json?load_relations=["CustomFieldValues", "CustomFieldValues.value"]`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET CUSTOMER', err);
+    }
+  }
+
+  async getContactByID(accountId, contactID){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Contact/${contactID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET CONTACT', err);
     }
   }
 
@@ -318,7 +504,7 @@ class Lightspeed {
   }
 
   async getItemById(accountId, itemId) {
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer"]`;
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer", "CustomFieldValues", "CustomFieldValues.value"]`;
 
     const options = {
       method: 'GET',
