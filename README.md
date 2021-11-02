@@ -26,6 +26,18 @@ const lightspeed = new Lightspeed({
 
 ### Examples
 
+Post customer information:
+
+```js
+const customer = await lightspeed.postCustomer(customer);
+```
+
+Update customer information:
+
+```js
+const customer = await lightspeed.putCustomer(customer, customerID);
+```
+
 Retrieve account information:
 
 ```js
@@ -61,6 +73,12 @@ Pagination is handled by the SDK by returning a cursor when querying:
 - getItems
 - getCategories
 - getManufacturers
+- getSales
+- getSaleLineBySaleID
+- getSalePaymentBySaleID
+- getItemsByMatrixID
+- getCustomers
+- getCustomerTypes
 
 The object has an [async iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator)
 so you can do a `for await` loop to retrieve all the items,

@@ -236,6 +236,23 @@ class Lightspeed {
     }
   }
 
+  async postPaymentMethod(accountId, paymentMethod){
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/PaymentType.json`;
+
+    const options = {
+      method: 'POST',
+      url,
+      data: paymentMethod
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('POST PAYMENT METHOD', err);
+    }
+  }
+
   async postCustomerCustomField(accountId, customField){
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/CustomField.json`;
 
