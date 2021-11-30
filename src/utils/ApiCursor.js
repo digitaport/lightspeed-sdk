@@ -15,6 +15,7 @@ class ApiCursor extends Readable {
 
   async toArray() {
     const elements = [];
+
     for await (const item of this) {
       elements.push(item);
     }
@@ -29,8 +30,8 @@ class ApiCursor extends Readable {
     const lsInstance = this._instance;
 
     while (keepFetching) {
-      let url = "";      
-      if(this._baseUrl.includes('?')){
+      let url = '';
+      if (this._baseUrl.includes('?')) {
         url = `${this._baseUrl}&${querystring.stringify({
           ...this._qs,
           offset,
@@ -55,6 +56,10 @@ class ApiCursor extends Readable {
         // When a list is empty, the API response doesn't return the "resource" attribute
         if (apiResponse.data[resource] == undefined || !Array.isArray(apiResponse.data[resource])) {
           keepFetching = false;
+
+          if (!Array.isArray(apiResponse.data[resource])) {
+            yield apiResponse.data[resource];
+          }
           break;
         }
 
