@@ -345,7 +345,6 @@ class Lightspeed {
       url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(`><,${start},${end}`)}`;
     }
 
-    console.log("URL: "+url);
     return new ApiCursor(url, 'Sale', this, {
       load_relations: '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
     }); 
