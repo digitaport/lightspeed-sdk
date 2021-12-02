@@ -57,7 +57,7 @@ class ApiCursor extends Readable {
         if (apiResponse.data[resource] == undefined || !Array.isArray(apiResponse.data[resource])) {
           keepFetching = false;
 
-          if (!Array.isArray(apiResponse.data[resource])) {
+          if (!Array.isArray(apiResponse.data[resource]) && apiResponse.data[resource] != undefined) {
             yield apiResponse.data[resource];
           }
           break;
