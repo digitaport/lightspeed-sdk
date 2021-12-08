@@ -337,6 +337,19 @@ class Lightspeed {
     }
   }
 
+  getCompletedSalesByPeriod(accountId, start, end){
+    let url = null;
+    if(end == undefined){
+      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(`>,${start}`)}`;
+    }else{
+      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(`><,${start},${end}`)}`;
+    }
+
+    return new ApiCursor(url, 'Sale', this, {
+      load_relations: '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+    }); 
+  }
+
   getSales(accountId){
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
     return new ApiCursor(url, 'Sale', this, {
