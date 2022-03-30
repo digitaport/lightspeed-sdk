@@ -359,7 +359,7 @@ class Lightspeed {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
     return new ApiCursor(url, 'Sale', this, {
       load_relations:
-        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer", "Discount", "Customer.Contact"]',
+        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
   }
 
