@@ -458,6 +458,22 @@ class Lightspeed {
       return this.handleResponseError('GET SHOP', err);
     }
   }
+  
+  async getDiscountByID(accountId, discountID) {
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Discount/${discountID}.json?load_relations=[]`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET DISCOUNT', err);
+    }
+  }
 
   async getCustomerByID(accountId, customerID) {
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer/${customerID}.json?load_relations=["CustomFieldValues", "CustomFieldValues.value"]`;
