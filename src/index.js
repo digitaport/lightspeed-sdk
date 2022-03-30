@@ -351,7 +351,7 @@ class Lightspeed {
 
     return new ApiCursor(url, 'Sale', this, {
       load_relations:
-        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
   }
 
