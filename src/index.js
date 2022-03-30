@@ -460,7 +460,7 @@ class Lightspeed {
   }
   
   async getDiscountByID(accountId, discountID) {
-    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Discount/${discountID}.json?load_relations=[]`;
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Discount/${discountID}.json`;
 
     const options = {
       method: 'GET',
