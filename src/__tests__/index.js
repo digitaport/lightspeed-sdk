@@ -663,7 +663,7 @@ describe('Lightspeed class', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%5D&offset=0&limit=100'
+            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -715,7 +715,7 @@ describe('Lightspeed class', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%5D&offset=0&limit=100'
+            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
