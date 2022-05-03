@@ -351,7 +351,7 @@ class Lightspeed {
 
     return new ApiCursor(url, 'Sale', this, {
       load_relations:
-        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
   }
 
@@ -359,7 +359,7 @@ class Lightspeed {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
     return new ApiCursor(url, 'Sale', this, {
       load_relations:
-        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer"]',
+        '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
   }
 
@@ -456,6 +456,22 @@ class Lightspeed {
       return response.data;
     } catch (err) {
       return this.handleResponseError('GET SHOP', err);
+    }
+  }
+  
+  async getDiscountByID(accountId, discountID) {
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Discount/${discountID}.json`;
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET DISCOUNT', err);
     }
   }
 
