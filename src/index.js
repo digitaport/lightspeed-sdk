@@ -458,7 +458,7 @@ class Lightspeed {
       return this.handleResponseError('GET SHOP', err);
     }
   }
-  
+
   async getDiscountByID(accountId, discountID) {
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Discount/${discountID}.json`;
 
