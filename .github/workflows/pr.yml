@@ -1,0 +1,19 @@
+name: ci
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run test
+      - run: npm run check
+      - run: npm run build
