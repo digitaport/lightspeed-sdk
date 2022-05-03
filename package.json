@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --env=node",
     "build": "babel src --out-dir dist",
-    "check": "prettier --check src"
+    "check": "prettier --check src",
+    "lint": "prettier --write src"
   },
   "repository": {
     "type": "git",
