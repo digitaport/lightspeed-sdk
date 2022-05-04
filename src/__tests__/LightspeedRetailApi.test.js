@@ -1,7 +1,7 @@
 const nock = require('nock');
-const Lightspeed = require('../index');
+const Lightspeed = require('../clients/LightspeedRetailApi');
 
-describe('Lightspeed class', () => {
+describe('Lightspeed Retail Api', () => {
   it('has all the methods available', () => {
     const lightspeed = new Lightspeed({
       clientId: 'client',

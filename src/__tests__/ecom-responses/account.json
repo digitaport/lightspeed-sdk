@@ -1,0 +1,35 @@
+{
+  "account": {
+    "id": 123456,
+    "appId": false,
+    "apiKey": "deadbeef",
+    "signout": {
+      "resource": {
+        "id": false,
+        "url": "account/signout",
+        "link": "https://api.shoplightspeed.com/us/account/signout.json"
+      }
+    },
+    "permissions": {
+      "resource": {
+        "id": false,
+        "url": "account/permissions",
+        "link": "https://api.shoplightspeed.com/us/account/permissions.json"
+      }
+    },
+    "ratelimit": {
+      "resource": {
+        "id": false,
+        "url": "account/ratelimit",
+        "link": "https://api.shoplightspeed.com/us/account/ratelimit.json"
+      }
+    },
+    "metafields": {
+      "resource": {
+        "id": false,
+        "url": "account/metafields",
+        "link": "https://api.shoplightspeed.com/us/account/metafields.json"
+      }
+    }
+  }
+}
