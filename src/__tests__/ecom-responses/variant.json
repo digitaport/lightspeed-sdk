@@ -1,0 +1,70 @@
+{
+  "variant": {
+    "id": 59479682,
+    "createdAt": "2021-01-12T18:31:34+00:00",
+    "updatedAt": "2022-05-05T17:48:29+00:00",
+    "isDefault": true,
+    "sortOrder": 1,
+    "articleCode": "210000014897",
+    "ean": "814432000282",
+    "sku": "",
+    "hs": null,
+    "unitPrice": 0,
+    "unitUnit": null,
+    "priceExcl": 1.95,
+    "priceIncl": 1.95,
+    "priceCost": 1.35,
+    "oldPriceExcl": 0,
+    "oldPriceIncl": 0,
+    "stockTracking": "enabled",
+    "stockLevel": 230,
+    "stockAlert": 5,
+    "stockMinimum": 0,
+    "stockSold": 113,
+    "stockBuyMininum": 1,
+    "stockBuyMinimum": 1,
+    "stockBuyMaximum": 10000,
+    "weight": 0,
+    "weightValue": "0.000",
+    "weightUnit": "g",
+    "volume": 0,
+    "volumeValue": 0,
+    "volumeUnit": "ml",
+    "colli": 0,
+    "sizeX": 0,
+    "sizeY": 0,
+    "sizeZ": 0,
+    "sizeXValue": "0.000",
+    "sizeYValue": "0.000",
+    "sizeZValue": "0.000",
+    "sizeUnit": "in",
+    "matrix": false,
+    "title": "Default",
+    "taxType": "auto",
+    "image": false,
+    "tax": false,
+    "product": {
+      "resource": {
+        "id": 36211963,
+        "url": "products/36211963",
+        "link": "https://api.shoplightspeed.com/us/products/36211963.json"
+      }
+    },
+    "movements": {
+      "resource": {
+        "id": false,
+        "url": "variants/movements?variant=59479682",
+        "link": "https://api.shoplightspeed.com/us/variants/movements.json?variant=59479682"
+      }
+    },
+    "metafields": {
+      "resource": {
+        "id": false,
+        "url": "variants/59479682/metafields",
+        "link": "https://api.shoplightspeed.com/us/variants/59479682/metafields.json"
+      }
+    },
+    "additionalcost": false,
+    "options": []
+  }
+}

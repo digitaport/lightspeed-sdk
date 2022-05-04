@@ -1,14 +1,15 @@
+export type TaxObject = {
+  name: string;
+  rate: number;
+  amount: number;
+};
+
 export type AddressObject = {
   id: number;
   code: string;
   code3?: string;
   title?: string;
-};
-
-export type TaxObject = {
-  name: string;
-  rate: number;
-  amount: number;
+  name?: string;
 };
 
 export type ShipmentData = {
@@ -150,4 +151,91 @@ export type Order = {
   quote: ResourceLink;
   events: ResourceLink;
   giftCardsPayment: ResourceLink; //might be wrong?
+};
+
+export type OrderProduct = {
+  id: number;
+  supplierTitle: string;
+  brandTitle: string;
+  productTitle: string;
+  variantTitle: string;
+  taxRate: number;
+  taxRates: TaxObject[];
+  quantityOrdered: number;
+  quantityInvoiced: number;
+  quantityShipped: number;
+  quantityRefunded: number;
+  quantityReturned: number;
+  articleCode: string;
+  ean: string;
+  sku: '';
+  weight: number;
+  volume: number;
+  colli: number;
+  sizeX: number;
+  sizeY: number;
+  sizeZ: number;
+  priceCost: number;
+  customExcl: number;
+  customIncl: number;
+  basePriceExcl: number;
+  basePriceIncl: number;
+  priceExcl: number;
+  priceIncl: number;
+  discountExcl: number;
+  discountIncl: number;
+  customFields: boolean;
+  product: ResourceLink;
+  variant: ResourceLink;
+};
+
+export type ProductVariant = {
+  additionalcost: boolean;
+  articleCode: string;
+  colli: number;
+  createdAt: string;
+  ean: string;
+  hs: unknown;
+  id: number;
+  image: boolean;
+  isDefault: boolean;
+  matrix: boolean;
+  metafields: ResourceLink;
+  movements: ResourceLink;
+  oldPriceExcl: number;
+  oldPriceIncl: number;
+  options: unknown[];
+  priceCost: number;
+  priceExcl: number;
+  priceIncl: number;
+  product: ResourceLink;
+  sizeUnit: string;
+  sizeX: number;
+  sizeXValue: string;
+  sizeY: number;
+  sizeYValue: string;
+  sizeZ: number;
+  sizeZValue: string;
+  sku: string;
+  sortOrder: number;
+  stockAlert: number;
+  stockBuyMaximum: number;
+  stockBuyMinimum: number;
+  stockBuyMininum: number;
+  stockLevel: number;
+  stockMinimum: number;
+  stockSold: number;
+  stockTracking: string;
+  tax: boolean;
+  taxType: string;
+  title: string;
+  unitPrice: number;
+  unitUnit: null;
+  updatedAt: string;
+  volume: number;
+  volumeUnit: string;
+  volumeValue: number;
+  weight: number;
+  weightUnit: string;
+  weightValue: string;
 };

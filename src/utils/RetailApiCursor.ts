@@ -1,16 +1,19 @@
-const { Readable } = require('stream');
 const querystring = require('querystring');
 
-class RetailApiCursor extends Readable {
-  constructor(baseUrl, resource, instance, queryString) {
-    super();
-    this._baseUrl = baseUrl;
-    this._resource = resource;
-    this._instance = instance;
-    this._queryString = queryString;
+class RetailApiCursor<T = any> {
+  private readonly baseUrl: string;
+  private readonly resource: string;
+  private readonly instance: any;
+  private readonly queryString: Record<string, string>;
+
+  constructor(baseUrl, resource, instance, queryString = {}) {
+    this.baseUrl = baseUrl;
+    this.resource = resource;
+    this.instance = instance;
+    this.queryString = queryString;
   }
 
-  async toArray() {
+  async toArray(): Promise<T[]> {
     const elements = [];
 
     for await (const item of this) {
@@ -19,24 +22,24 @@ class RetailApiCursor extends Readable {
     return elements;
   }
 
-  async *[Symbol.asyncIterator]() {
+  async *[Symbol.asyncIterator](): AsyncGenerator<T, string, boolean> {
     let offset = 0;
     const limit = 100;
     let keepFetching = true;
-    const resource = this._resource;
-    const lsInstance = this._instance;
+    const resource = this.resource;
+    const lsInstance = this.instance;
 
     while (keepFetching) {
       let url = '';
-      if (this._baseUrl.includes('?')) {
-        url = `${this._baseUrl}&${querystring.stringify({
-          ...this._queryString,
+      if (this.baseUrl.includes('?')) {
+        url = `${this.baseUrl}&${querystring.stringify({
+          ...this.queryString,
           offset,
           limit,
         })}`;
       } else {
-        url = `${this._baseUrl}?${querystring.stringify({
-          ...this._queryString,
+        url = `${this.baseUrl}?${querystring.stringify({
+          ...this.queryString,
           offset,
           limit,
         })}`;
@@ -77,7 +80,9 @@ class RetailApiCursor extends Readable {
         throw err;
       }
     }
+
+    return 'done';
   }
 }
 
-module.exports = RetailApiCursor;
+export default RetailApiCursor;

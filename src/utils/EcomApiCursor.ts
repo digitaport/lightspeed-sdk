@@ -51,8 +51,8 @@ class EcomApiCursor<T> {
       const apiResponse = await this.axiosClient.get(url);
       const dataSet = apiResponse.data[this.resource];
 
-      // When a list is empty, the API response doesn't return the "resource" attribute
       if (dataSet === undefined || !Array.isArray(dataSet)) {
+        console.error('Data Set Empty');
         return 'done';
       }
 

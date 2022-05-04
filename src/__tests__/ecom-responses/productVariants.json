@@ -1,0 +1,72 @@
+{
+  "variants": [
+    {
+      "additionalcost": false,
+      "articleCode": "210000014897",
+      "colli": 0,
+      "createdAt": "2021-01-12T18:31:34+00:00",
+      "ean": "814432000282",
+      "hs": null,
+      "id": 59479682,
+      "image": false,
+      "isDefault": true,
+      "matrix": false,
+      "metafields": {
+        "resource": {
+          "id": false,
+          "link": "https://api.shoplightspeed.com/us/variants/59479682/metafields.json",
+          "url": "variants/59479682/metafields"
+        }
+      },
+      "movements": {
+        "resource": {
+          "id": false,
+          "link": "https://api.shoplightspeed.com/us/variants/movements.json?variant=59479682",
+          "url": "variants/movements?variant=59479682"
+        }
+      },
+      "oldPriceExcl": 0,
+      "oldPriceIncl": 0,
+      "options": [],
+      "priceCost": 1.35,
+      "priceExcl": 1.95,
+      "priceIncl": 1.95,
+      "product": {
+        "resource": {
+          "id": 36211963,
+          "link": "https://api.shoplightspeed.com/us/products/36211963.json",
+          "url": "products/36211963"
+        }
+      },
+      "sizeUnit": "in",
+      "sizeX": 0,
+      "sizeXValue": "0.000",
+      "sizeY": 0,
+      "sizeYValue": "0.000",
+      "sizeZ": 0,
+      "sizeZValue": "0.000",
+      "sku": "",
+      "sortOrder": 1,
+      "stockAlert": 5,
+      "stockBuyMaximum": 10000,
+      "stockBuyMinimum": 1,
+      "stockBuyMininum": 1,
+      "stockLevel": 230,
+      "stockMinimum": 0,
+      "stockSold": 113,
+      "stockTracking": "enabled",
+      "tax": false,
+      "taxType": "auto",
+      "title": "Default",
+      "unitPrice": 0,
+      "unitUnit": null,
+      "updatedAt": "2022-05-05T17:48:29+00:00",
+      "volume": 0,
+      "volumeUnit": "ml",
+      "volumeValue": 0,
+      "weight": 0,
+      "weightUnit": "g",
+      "weightValue": "0.000"
+    }
+  ]
+}
