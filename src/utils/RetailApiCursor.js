@@ -1,16 +1,13 @@
 const { Readable } = require('stream');
 const querystring = require('querystring');
 
-const { performRequest } = require('./HttpClient');
-
-class ApiCursor extends Readable {
-  constructor(baseUrl, resource, instance, qs, opts) {
+class RetailApiCursor extends Readable {
+  constructor(baseUrl, resource, instance, queryString) {
     super();
     this._baseUrl = baseUrl;
     this._resource = resource;
     this._instance = instance;
-    this._qs = qs;
-    this.opts = opts;
+    this._queryString = queryString;
   }
 
   async toArray() {
@@ -33,13 +30,13 @@ class ApiCursor extends Readable {
       let url = '';
       if (this._baseUrl.includes('?')) {
         url = `${this._baseUrl}&${querystring.stringify({
-          ...this._qs,
+          ...this._queryString,
           offset,
           limit,
         })}`;
       } else {
         url = `${this._baseUrl}?${querystring.stringify({
-          ...this._qs,
+          ...this._queryString,
           offset,
           limit,
         })}`;
@@ -83,6 +80,4 @@ class ApiCursor extends Readable {
   }
 }
 
-module.exports = {
-  ApiCursor,
-};
+module.exports = RetailApiCursor;

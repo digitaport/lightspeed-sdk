@@ -2,15 +2,15 @@ const axios = require('axios');
 const querystring = require('querystring');
 const FormData = require('form-data');
 
-const { sleep } = require('./utils/timeUtils');
+const { sleep } = require('../utils/timeUtils');
 
-const { ApiCursor } = require('./utils/ApiCursor');
+const ApiCursor = require('../utils/RetailApiCursor');
 
-class Lightspeed {
+class LightspeedRetailApi {
   constructor(opts) {
     const { clientId, clientSecret, refreshToken } = opts;
 
-    Lightspeed.validate(opts);
+    LightspeedRetailApi.validate(opts);
 
     this._lastResponse = null;
     this._clientId = clientId;
@@ -61,7 +61,7 @@ class Lightspeed {
 
     const { method } = options;
 
-    const requiredUnits = Lightspeed.getRequiredUnits(method);
+    const requiredUnits = LightspeedRetailApi.getRequiredUnits(method);
     const rateHeader = this._lastResponse.headers['x-ls-api-bucket-level'];
     if (!rateHeader) return null;
 
@@ -111,7 +111,7 @@ class Lightspeed {
   async getToken() {
     const url = 'https://cloud.merchantos.com/oauth/access_token.php';
 
-    const data = Lightspeed.buildAuthFormData(
+    const data = LightspeedRetailApi.buildAuthFormData(
       this._clientId,
       this._clientSecret,
       this._refreshToken
@@ -601,4 +601,4 @@ class Lightspeed {
   }
 }
 
-module.exports = Lightspeed;
+module.exports = LightspeedRetailApi;
