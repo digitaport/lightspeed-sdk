@@ -1,75 +1,115 @@
+import { AxiosError, AxiosResponse } from 'axios';
+import {
+  AccessTokenResponse,
+  Customer,
+  CustomerSearchParams,
+  Item,
+  PaymentType,
+  PostCustomer,
+  PostSale,
+  Sale,
+  SearchParam,
+  TaxCategory,
+} from './RetailApiTypes';
+import RetailApiCursor from '../utils/RetailApiCursor';
+
 const axios = require('axios');
 const querystring = require('querystring');
 const FormData = require('form-data');
 
 const { sleep } = require('../utils/timeUtils');
 
-const ApiCursor = require('../utils/RetailApiCursor');
+type ConstructorOptions = {
+  clientId: string;
+  clientSecret: string;
+  refreshToken: string;
+};
+
+interface SearchParams {
+  [key: string]: SearchParam | string;
+}
+
+const toLSQueryParam = (searchParam: SearchParam | string): string => {
+  if (typeof searchParam === 'string') {
+    return searchParam;
+  } else if (searchParam[0] === '=') {
+    return searchParam[1];
+  } else {
+    return searchParam.join(',');
+  }
+};
+
+const searchParamsToQueryParams = (searchParams: SearchParams): Record<string, string> => {
+  return Object.entries(searchParams).reduce(
+    (queryParams, [param, searchParam]) => ({
+      [param]: toLSQueryParam(searchParam),
+      ...queryParams,
+    }),
+    {}
+  );
+};
+
+const getRequiredUnits = (operation: 'GET' | 'POST' | 'PUT'): number => {
+  switch (operation) {
+    case 'GET':
+      return 1;
+    case 'POST':
+    case 'PUT':
+      return 10;
+    default:
+      return 10;
+  }
+};
+
+const buildAuthFormData = (clientId: string, clientSecret: string, token: string): FormData => {
+  const form = new FormData();
+
+  form.append('client_id', clientId);
+  form.append('client_secret', clientSecret);
+  form.append('refresh_token', token);
+  form.append('grant_type', 'refresh_token');
+
+  return form;
+};
 
 class LightspeedRetailApi {
-  constructor(opts) {
+  private lastResponse: AxiosResponse;
+  private readonly clientId: string;
+  private readonly clientSecret: string;
+  private refreshToken: string;
+
+  constructor(opts: ConstructorOptions) {
     const { clientId, clientSecret, refreshToken } = opts;
 
-    LightspeedRetailApi.validate(opts);
-
-    this._lastResponse = null;
-    this._clientId = clientId;
-    this._clientSecret = clientSecret;
-    this._refreshToken = refreshToken;
+    this.lastResponse = null;
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.refreshToken = refreshToken;
   }
 
-  static validate(opts) {
-    let missingField = null;
-
-    const requiredFields = ['clientId', 'clientSecret', 'refreshToken'];
-
-    for (const requiredField of requiredFields) {
-      if (!opts[requiredField]) {
-        missingField = requiredField;
-        break;
-      }
-    }
-
-    if (missingField) {
-      throw new Error(`Param ${missingField} is required`);
-    }
-  }
-
-  static getRequiredUnits(operation) {
-    switch (operation) {
-      case 'GET':
-        return 1;
-      case 'POST':
-      case 'PUT':
-        return 10;
-      default:
-        return 10;
-    }
-  }
-
-  handleResponseError(msg, err) {
-    console.log(`${msg} - ${err}`);
+  private handleResponseError(msg, err): never {
+    console.error(`${msg} - ${err}`);
     throw err;
   }
 
-  setLastResponse(response) {
-    this._lastResponse = response;
+  private setLastResponse(response) {
+    this.lastResponse = response;
   }
 
-  async handleRateLimit(options) {
-    if (!this._lastResponse) return null;
+  private async handleRateLimit(options): Promise<number> {
+    if (!this.lastResponse) return null;
 
     const { method } = options;
 
-    const requiredUnits = LightspeedRetailApi.getRequiredUnits(method);
-    const rateHeader = this._lastResponse.headers['x-ls-api-bucket-level'];
+    const requiredUnits = getRequiredUnits(method);
+    const rateHeader = this.lastResponse.headers['x-ls-api-bucket-level'];
     if (!rateHeader) return null;
 
     const [usedUnits, bucketSize] = rateHeader.split('/');
     const availableUnits = bucketSize - usedUnits;
     if (requiredUnits <= availableUnits) return 0;
 
-    const dripRate = this._lastResponse.headers['x-ls-api-drip-rate'];
+    const dripRate = this.lastResponse.headers['x-ls-api-drip-rate'];
     const unitsToWait = requiredUnits - availableUnits;
     const delay = Math.ceil((unitsToWait / dripRate) * 1000);
     await sleep(delay);
@@ -77,11 +117,12 @@ class LightspeedRetailApi {
     return unitsToWait;
   }
 
-  async performRequest(options) {
+  private async performRequest(options): Promise<AxiosResponse | never> {
     // Wait if needed
     await this.handleRateLimit(options);
 
     // Regenerate token
+    // TODO: We are generating a new token on every request, we should probably only do that if its expired.
     const token = (await this.getToken()).access_token;
     if (!token) {
       throw new Error('Error fetching token');
@@ -90,38 +131,30 @@ class LightspeedRetailApi {
     options.headers = { Authorization: `Bearer ${token}` };
 
     // Execute request
-    const response = await axios(options);
-
-    // Keep last response
-    this._lastResponse = response;
-    return response;
+    try {
+      const response = await axios(options);
+      // Keep last response
+      this.lastResponse = response;
+      return response;
+    } catch (error) {
+      const axiosResponseError = error as AxiosError;
+      console.error('Failed request statusText:', axiosResponseError.response.statusText);
+      console.error('Failed data:', axiosResponseError.response.data);
+      throw axiosResponseError;
+    }
   }
 
-  static buildAuthFormData(clientId, clientSecret, token) {
-    const form = new FormData();
-
-    form.append('client_id', clientId);
-    form.append('client_secret', clientSecret);
-    form.append('refresh_token', token);
-    form.append('grant_type', 'refresh_token');
-
-    return form;
-  }
-
-  async getToken() {
+  async getToken(): Promise<AccessTokenResponse | never> {
     const url = 'https://cloud.merchantos.com/oauth/access_token.php';
 
-    const data = LightspeedRetailApi.buildAuthFormData(
-      this._clientId,
-      this._clientSecret,
-      this._refreshToken
-    );
+    const data: FormData = buildAuthFormData(this.clientId, this.clientSecret, this.refreshToken);
 
     const options = {
       method: 'POST',
       url,
       data,
       headers: {
+        // @ts-ignore
         'content-type': `multipart/form-data; boundary=${data._boundary}`,
       },
     };
@@ -151,7 +184,10 @@ class LightspeedRetailApi {
     }
   }
 
-  async postCustomer(accountId, customer) {
+  async postCustomer(
+    accountId: number | string,
+    customer: PostCustomer
+  ): Promise<Customer | never> {
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Customer.json`;
 
     const options = {
@@ -162,7 +198,7 @@ class LightspeedRetailApi {
 
     try {
       const response = await this.performRequest(options);
-      return response.data;
+      return response.data.Customer;
     } catch (err) {
       return this.handleResponseError('POST CUSTOMER', err);
     }
@@ -270,6 +306,23 @@ class LightspeedRetailApi {
     }
   }
 
+  async postSale(accountId, sale: PostSale): Promise<Sale> {
+    const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Sale.json`;
+
+    const options = {
+      method: 'POST',
+      url,
+      data: sale,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data.Sale as Sale;
+    } catch (err) {
+      return this.handleResponseError('POST SALE', err);
+    }
+  }
+
   async putItem(accountId, item, ID) {
     const url = `https://api.lightspeedapp.com/API/Account/${accountId}/Item/${ID}.json`;
 
@@ -337,6 +390,12 @@ class LightspeedRetailApi {
     }
   }
 
+  async getTaxCategory(accountId, taxCategoryId): Promise<TaxCategory> {
+    const url = `https://api.merchantos.com/API/V3/Account/${accountId}/TaxCategory/${taxCategoryId}.json`;
+
+    return (await this.performRequest({ method: 'GET', url })).data.TaxCategory as TaxCategory;
+  }
+
   getCompletedSalesByPeriod(accountId, start, end) {
     let url = null;
     if (end == undefined) {
@@ -349,7 +408,7 @@ class LightspeedRetailApi {
       )}`;
     }
 
-    return new ApiCursor(url, 'Sale', this, {
+    return new RetailApiCursor(url, 'Sale', this, {
       load_relations:
         '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
@@ -357,10 +416,35 @@ class LightspeedRetailApi {
 
   getSales(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json`;
-    return new ApiCursor(url, 'Sale', this, {
+    return new RetailApiCursor(url, 'Sale', this, {
       load_relations:
         '["TaxCategory","SaleLines","SaleLines.Item","SalePayments","SalePayments.PaymentType","Customer","Discount","Customer.Contact"]',
     });
+  }
+
+  public async getSale(accountId, saleId) {
+    const queryString = {
+      load_relations: JSON.stringify([
+        'TaxCategory',
+        'SaleLines',
+        'SalePayments',
+        'SalePayments.PaymentType',
+      ]),
+    };
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Sale/${saleId}.json?${querystring.stringify(
+      queryString
+    )}`;
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET SALE PAYMENT', err);
+    }
   }
 
   async getSalePaymentByID(accountId, salePaymentID) {
@@ -555,8 +639,20 @@ class LightspeedRetailApi {
     }
   }
 
-  async getItemById(accountId, itemId) {
-    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=["ItemShops", "Images", "Manufacturer", "CustomFieldValues", "CustomFieldValues.value"]`;
+  async getItemById(
+    accountId,
+    itemId,
+    loadRelations = [
+      'ItemShops',
+      'Images',
+      'Manufacturer',
+      'CustomFieldValues',
+      'CustomFieldValues.value',
+    ]
+  ): Promise<Item> {
+    const url = `https://api.merchantos.com/API/Account/${accountId}/Item/${itemId}.json?load_relations=${querystring.escape(
+      JSON.stringify(loadRelations)
+    )}`;
 
     const options = {
       method: 'GET',
@@ -565,7 +661,7 @@ class LightspeedRetailApi {
 
     try {
       const response = await this.performRequest(options);
-      return response.data;
+      return response.data.Item;
     } catch (err) {
       return this.handleResponseError(`GET ITEM BY ID ${itemId}`, err);
     }
@@ -573,32 +669,41 @@ class LightspeedRetailApi {
 
   getCategories(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Category.json`;
-    return new ApiCursor(url, 'Category', this);
+    return new RetailApiCursor(url, 'Category', this);
   }
 
   getManufacturers(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Manufacturer.json`;
-    return new ApiCursor(url, 'Manufacturer', this);
+    return new RetailApiCursor(url, 'Manufacturer', this);
   }
 
   getItems(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
-    return new ApiCursor(url, 'Item', this, {
+    return new RetailApiCursor(url, 'Item', this, {
       load_relations: '["ItemShops", "Images", "Manufacturer"]',
     });
   }
 
-  getCustomers(accountId) {
+  getPaymentTypes(accountId) {
+    const url = `https://api.merchantos.com/API/Account/${accountId}/PaymentType.json`;
+    return new RetailApiCursor<PaymentType>(url, 'PaymentType', this, {});
+  }
+
+  getCustomers(
+    accountId,
+    customersSearchParams: CustomerSearchParams = {}
+  ): RetailApiCursor<Customer> {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Customer.json`;
-    return new ApiCursor(url, 'Customer', this, {
+    return new RetailApiCursor(url, 'Customer', this, {
       load_relations: '["Contact", "CustomFieldValues"]',
+      ...searchParamsToQueryParams(customersSearchParams),
     });
   }
 
   getCustomerTypes(accountId) {
     const url = `https://api.merchantos.com/API/Account/${accountId}/CustomerType.json`;
-    return new ApiCursor(url, 'CustomerType', this);
+    return new RetailApiCursor(url, 'CustomerType', this);
   }
 }
 
-module.exports = LightspeedRetailApi;
+export default LightspeedRetailApi;

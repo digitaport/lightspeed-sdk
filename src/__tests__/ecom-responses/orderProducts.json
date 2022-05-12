@@ -1,0 +1,62 @@
+{
+  "orderProducts": [
+    {
+      "id": 24147495,
+      "supplierTitle": "",
+      "brandTitle": "Flashed",
+      "productTitle": "Chalk Block 56g",
+      "variantTitle": "",
+      "taxRate": 0.14975,
+      "taxRates": [
+        {
+          "name": "GST",
+          "rate": 0.05,
+          "amount": 0.0975
+        },
+        {
+          "name": "QST",
+          "rate": 0.09974999999999999,
+          "amount": 0.19451249999999998
+        }
+      ],
+      "quantityOrdered": 1,
+      "quantityInvoiced": 1,
+      "quantityShipped": 1,
+      "quantityRefunded": 0,
+      "quantityReturned": 0,
+      "articleCode": "210000014897",
+      "ean": "814432000282",
+      "sku": "",
+      "weight": 0,
+      "volume": 0,
+      "colli": 0,
+      "sizeX": 0,
+      "sizeY": 0,
+      "sizeZ": 0,
+      "priceCost": 1.35,
+      "customExcl": 0,
+      "customIncl": 0,
+      "basePriceExcl": 1.95,
+      "basePriceIncl": 2.242,
+      "priceExcl": 1.95,
+      "priceIncl": 2.24,
+      "discountExcl": 0,
+      "discountIncl": 0,
+      "customFields": false,
+      "product": {
+        "resource": {
+          "id": 36211963,
+          "url": "products/36211963",
+          "link": "https://api.shoplightspeed.com/us/products/36211963.json"
+        }
+      },
+      "variant": {
+        "resource": {
+          "id": 59479682,
+          "url": "variants/59479682",
+          "link": "https://api.shoplightspeed.com/us/variants/59479682.json"
+        }
+      }
+    }
+  ]
+}
