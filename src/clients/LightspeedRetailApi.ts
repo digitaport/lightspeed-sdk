@@ -683,11 +683,23 @@ class LightspeedRetailApi {
     });
   }
 
-  getUpdatedItems(date = new Date(Date.now() - 300000).toISOString()) {
-    const url = `https://api.merchantos.com/API/Account/${this.accountId}/Item.json`;
-    return new RetailApiCursor(url, 'Item', this, {
-      load_relations: `["ItemShops", "Images", "Manufacturer", "ItemECommerce", "ItemAttributes"]&ItemShops.timeStamp=>,${date}`,
-    });
+  // Check for updates in the last 5 mins by default or pass an ISOString date as param
+  async getUpdatedItems(date = new Date(Date.now() - 300000).toISOString()) {
+    const url = `https://api.merchantos.com/API/Account/${this.accountId}/Item.json?load_relations=["ItemShops", "Images", "Manufacturer", "ItemECommerce", "ItemAttributes"]&ItemShops.timeStamp=>,${date}`;
+
+    console.log(url);
+
+    const options = {
+      method: 'GET',
+      url,
+    };
+
+    try {
+      const response = await this.performRequest(options);
+      return response.data;
+    } catch (err) {
+      return this.handleResponseError('GET UPDATE ITEMS', err);
+    }
   }
 
   getPaymentTypes() {
