@@ -187,9 +187,7 @@ class LightspeedRetailApi {
     }
   }
 
-  async postCustomer(
-    customer: PostCustomer
-  ): Promise<Customer | never> {
+  async postCustomer(customer: PostCustomer): Promise<Customer | never> {
     const url = `https://api.lightspeedapp.com/API/Account/${this.accountId}/Customer.json`;
 
     const options = {
@@ -401,13 +399,13 @@ class LightspeedRetailApi {
   getCompletedSalesByPeriod(start, end) {
     let url = null;
     if (end == undefined) {
-      url = `https://api.merchantos.com/API/Account/${this.accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(
-        `>,${start}`
-      )}`;
+      url = `https://api.merchantos.com/API/Account/${
+        this.accountId
+      }/Sale.json?completed==true&completeTime=${encodeURIComponent(`>,${start}`)}`;
     } else {
-      url = `https://api.merchantos.com/API/Account/${this.accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(
-        `><,${start},${end}`
-      )}`;
+      url = `https://api.merchantos.com/API/Account/${
+        this.accountId
+      }/Sale.json?completed==true&completeTime=${encodeURIComponent(`><,${start},${end}`)}`;
     }
 
     return new RetailApiCursor(url, 'Sale', this, {
@@ -433,9 +431,9 @@ class LightspeedRetailApi {
         'SalePayments.PaymentType',
       ]),
     };
-    const url = `https://api.merchantos.com/API/Account/${this.accountId}/Sale/${saleId}.json?${querystring.stringify(
-      queryString
-    )}`;
+    const url = `https://api.merchantos.com/API/Account/${
+      this.accountId
+    }/Sale/${saleId}.json?${querystring.stringify(queryString)}`;
     const options = {
       method: 'GET',
       url,
@@ -651,9 +649,9 @@ class LightspeedRetailApi {
       'CustomFieldValues.value',
     ]
   ): Promise<Item> {
-    const url = `https://api.merchantos.com/API/Account/${this.accountId}/Item/${itemId}.json?load_relations=${querystring.escape(
-      JSON.stringify(loadRelations)
-    )}`;
+    const url = `https://api.merchantos.com/API/Account/${
+      this.accountId
+    }/Item/${itemId}.json?load_relations=${querystring.escape(JSON.stringify(loadRelations))}`;
 
     const options = {
       method: 'GET',
@@ -681,7 +679,14 @@ class LightspeedRetailApi {
   getItems() {
     const url = `https://api.merchantos.com/API/Account/${this.accountId}/Item.json`;
     return new RetailApiCursor(url, 'Item', this, {
-      load_relations: '["ItemShops", "Images", "Manufacturer"]',
+      load_relations: '["ItemShops", "Images", "Manufacturer", "ItemECommerce", "ItemAttributes"]',
+    });
+  }
+
+  getUpdatedItems(date = new Date(Date.now() - 300000).toISOString()) {
+    const url = `https://api.merchantos.com/API/Account/${this.accountId}/Item.json`;
+    return new RetailApiCursor(url, 'Item', this, {
+      load_relations: `["ItemShops", "Images", "Manufacturer", "ItemECommerce", "ItemAttributes"]&ItemShops.timeStamp=>,${date}`,
     });
   }
 
@@ -690,9 +695,7 @@ class LightspeedRetailApi {
     return new RetailApiCursor<PaymentType>(url, 'PaymentType', this, {});
   }
 
-  getCustomers(
-    customersSearchParams: CustomerSearchParams = {}
-  ): RetailApiCursor<Customer> {
+  getCustomers(customersSearchParams: CustomerSearchParams = {}): RetailApiCursor<Customer> {
     const url = `https://api.merchantos.com/API/Account/${this.accountId}/Customer.json`;
     return new RetailApiCursor(url, 'Customer', this, {
       load_relations: '["Contact", "CustomFieldValues"]',
