@@ -281,4 +281,4 @@ export type Product = {
   tags: ResourceLink,
   variants: ResourceLink,
   movements: ResourceLink
-}
+};
