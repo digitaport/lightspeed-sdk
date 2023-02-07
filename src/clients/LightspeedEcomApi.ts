@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import EcomApiCursor from '../utils/EcomApiCursor';
-import { Account, Order, OrderProduct, ProductVariant } from './EcomTypes';
+import { Account, Order, OrderProduct, ProductVariant, Product } from './EcomTypes';
 
 type ClusterId = 'eu1' | 'EU1' | 'us1' | 'US1';
 
@@ -88,6 +88,15 @@ class LightspeedEcomApi {
     const response = await this.axiosClient.get(`variants/${variantId}.json`);
     return response.data.variant as ProductVariant;
   }
+
+   getVariantsAllProducts(): EcomApiCursor<ProductVariant[]> {
+   return new EcomApiCursor<ProductVariant[]>('variants', this.axiosClient, 'variants');
+  }
+
+  getProducts(): EcomApiCursor<Product[]> {
+    return  new EcomApiCursor<Product[]>('products', this.axiosClient, 'products');
+  }
+
 }
 
 export default LightspeedEcomApi;
