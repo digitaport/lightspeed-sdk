@@ -34,13 +34,13 @@ export type ResourceLink = {
 };
 
 export type ImageResource = {
-  createdAt: string,
-  updatedAt: string,
-  extension: string,
-  size: number,
-  title: string,
-  thumb: string,   //url
-  src: string //url
+  createdAt: string;
+  updatedAt: string;
+  extension: string;
+  size: number;
+  title: string;
+  thumb: string;
+  src: string;
 };
 
 export type PaymentData = {
@@ -252,33 +252,33 @@ export type ProductVariant = {
 
 
 export type Product = {
-  id: number,
-  createdAt: string,
-  updatedAt: string,
-  isVisible: boolean,
-  visibility: string,
-  hasMatrix: boolean,
-  data01: string,
-  data02: string,
-  data03: string,
-  url: string,
-  title: string,
-  fulltitle: string,
-  description: string,
-  content: string,
-  set: boolean,
-  brand: ResourceLink,
-  categories: ResourceLink,
-  deliverydate: boolean,
-  image: ImageResource,
-  images: ResourceLink,
-  relations: ResourceLink,
-  metafields: ResourceLink,
-  reviews: ResourceLink,
-  type: boolean,
-  attributes: ResourceLink,
-  supplier: ResourceLink,
-  tags: ResourceLink,
-  variants: ResourceLink,
-  movements: ResourceLink
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  isVisible: boolean;
+  visibility: string;
+  hasMatrix: boolean;
+  data01: string;
+  data02: string;
+  data03: string;
+  url: string;
+  title: string;
+  fulltitle: string;
+  description: string;
+  content: string;
+  set: boolean;
+  brand: ResourceLink;
+  categories: ResourceLink;
+  deliverydate: boolean;
+  image: ImageResource;
+  images: ResourceLink;
+  relations: ResourceLink;
+  metafields: ResourceLink;
+  reviews: ResourceLink;
+  type: boolean;
+  attributes: ResourceLink;
+  supplier: ResourceLink;
+  tags: ResourceLink;
+  variants: ResourceLink;
+  movements: ResourceLink;
 };
