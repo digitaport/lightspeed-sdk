@@ -399,11 +399,11 @@ class LightspeedRetailApi {
   getCompletedSalesByPeriod(accountId, start, end) {
     let url = null;
     if (end == undefined) {
-      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(
+      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed=true&completeTime=${encodeURIComponent(
         `>,${start}`
       )}`;
     } else {
-      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed==true&completeTime=${encodeURIComponent(
+      url = `https://api.merchantos.com/API/Account/${accountId}/Sale.json?completed=true&completeTime=${encodeURIComponent(
         `><,${start},${end}`
       )}`;
     }
